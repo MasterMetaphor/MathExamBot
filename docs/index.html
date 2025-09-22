@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math 1530 Question Bot</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#007bff">
+</head>
+<body>
+    <div class="container">
+        <h1>Math 1530 Question Bot</h1>
+        <div class="stats" id="stats-label">Score: 0/0 (0.0%)</div>
+        <div class="card">
+            <p id="question-text">Loading question...</p>
+        </div>
+        <div id="options-container" class="options-container">
+            <!-- Options will be dynamically inserted here -->
+        </div>
+        <div class="card feedback" id="feedback-card" style="display: none;">
+            <p id="feedback-text"></p>
+            <pre id="ti84-text"></pre>
+        </div>
+        <button id="next-button" class="button" disabled>Next Question</button>
+    </div>
+    <script src="question-bank.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
