@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const feedbackText = document.getElementById('feedback-text');
     const ti84Text = document.getElementById('ti84-text');
     const nextButton = document.getElementById('next-button');
+    const skipButton = document.getElementById('skip-button');
     const statsLabel = document.getElementById('stats-label');
     const hintButton = document.getElementById('hint-button');
     const hintCard = document.getElementById('hint-card');
@@ -56,14 +57,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     this.frameIndex = 0; // Loop for idle
                 }
-                this.mascot.src = `./static/${frames[this.frameIndex]}`; // Use explicit relative path
+                this.mascot.src = `/static/${frames[this.frameIndex]}`; // Always prepend /static/
                 this.frameIndex++;
             }, speed);
         },
 
         playCorrect: function() {
             // Show rocket with flames, then trigger CSS animation
-            this.mascot.src = './static/mascot_correct_1.png'; // Use explicit relative path
+            this.mascot.src = '/static/mascot_correct_1.png'; // Always use full path
             this.mascot.classList.add('blast-off');
         },
         
@@ -105,16 +106,17 @@ document.addEventListener('DOMContentLoaded', () => {
         exampleContainer.style.display = 'none';
         exampleText.textContent = '';
 
-        nextButton.disabled = true;
         hintButton.disabled = false;
 
-        // Reset next button to its original bottom position
+        // Reset next button to its original bottom position and hide it
         if (nextButtonContainerTop) {
             nextButtonContainerTop.style.display = 'none';
         }
         if (bottomButtonContainer && nextButton) {
             bottomButtonContainer.appendChild(nextButton);
         }
+        nextButton.style.display = 'none';
+        skipButton.style.display = 'block';
 
         questionText.textContent = currentQuestion.question;
         optionsContainer.innerHTML = '';
@@ -128,11 +130,22 @@ document.addEventListener('DOMContentLoaded', () => {
             optionsContainer.appendChild(button);
         });
 
+        nextButton.style.display = 'block'; // Make the button visible
+        skipButton.style.display = 'none'; // Hide the skip button
         // Move next button to appear above the options
         if (nextButtonContainerTop && nextButton) {
             nextButtonContainerTop.appendChild(nextButton);
             nextButtonContainerTop.style.display = 'flex';
         }
+
+        if (currentQuestion.example) {
+            animateExample(currentQuestion.example);
+        }
+
+        feedbackCard.style.display = 'block';
+        hintCard.style.display = 'none';
+        nextButton.disabled = false;
+        hintButton.disabled = true;
     }
 
     function handleAnswer(event) {
@@ -207,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const topPos = rToLLanes.splice(laneIndex, 1)[0];
             rocket.style.top = `${topPos}px`;
 
-            rocket.src = './static/mascot_mini_rocket_left.png';
+            rocket.src = '/static/mascot_mini_rocket_left.png';
             rocket.classList.add('fly-left');
             overlay.appendChild(rocket);
         }
@@ -224,7 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const topPos = lToRLanes.splice(laneIndex, 1)[0];
             rocket.style.top = `${topPos}px`;
             
-            rocket.src = './static/mascot_mini_rocket_right.png';
+            rocket.src = '/static/mascot_mini_rocket_right.png';
             rocket.classList.add('fly-right');
             overlay.appendChild(rocket);
         }
@@ -234,6 +247,14 @@ document.addEventListener('DOMContentLoaded', () => {
             overlay.innerHTML = '';
             overlay.style.display = 'none';
         }, 5500);
+    }
+
+    function skipQuestion() {
+        // Skipping doesn't affect the score, but it does break the streak.
+        streak = 0;
+        multiplier = 1;
+        updateStats();
+        getQuestion();
     }
 
     function updateStats() {
@@ -270,6 +291,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     nextButton.addEventListener('click', getQuestion);
+    skipButton.addEventListener('click', skipQuestion);
     hintButton.addEventListener('click', showHint);
 
     // Initial load
