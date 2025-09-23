@@ -54,14 +54,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     this.frameIndex = 0; // Loop for idle
                 }
-                this.mascot.src = `/static/${frames[this.frameIndex]}`;
+                this.mascot.src = `./static/${frames[this.frameIndex]}`;
                 this.frameIndex++;
             }, speed);
         },
 
         playCorrect: function() {
             // Show rocket with flames, then trigger CSS animation
-            this.mascot.src = '/static/mascot_correct_1.png';
+            this.mascot.src = './static/mascot_correct_1.png';
             this.mascot.classList.add('blast-off');
         },
         
@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         for (let i = 0; i < numRockets; i++) {
             const rocket = document.createElement('img');
-            rocket.src = '/static/mini_rocket.png';
+            rocket.src = './static/mini_rocket.png';
             rocket.className = 'mini-rocket';
             rocket.style.top = `${(i * laneHeight) + (laneHeight / 2) - 12}px`;
 
@@ -237,7 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // PWA Service Worker Registration
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/service-worker.js')
+        navigator.serviceWorker.register('./service-worker.js')
             .then((reg) => console.log('Service worker registered.', reg))
             .catch((err) => console.log('Service worker not registered.', err));
     }
