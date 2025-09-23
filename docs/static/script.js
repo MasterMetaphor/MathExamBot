@@ -1,17 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Start Page Mascot Animation ---
-    const startPageMascot = document.getElementById('mascot');
-    if (startPageMascot && startPageMascot.dataset.frames) {
-        const frames = JSON.parse(startPageMascot.dataset.frames.replace(/'/g, '"'));
-        let currentFrame = 0;
-        setInterval(() => {
-            currentFrame = (currentFrame + 1) % frames.length;
-            startPageMascot.src = `./static/${frames[currentFrame]}`;
-        }, 500);
-    }
-
-    // --- Quiz Page Logic ---
     const questionText = document.getElementById('question-text');
+    if (!questionText) return; // Only run if we are on the quiz page
+
     const optionsContainer = document.getElementById('options-container');
     const feedbackCard = document.getElementById('feedback-card');
     const feedbackText = document.getElementById('feedback-text');
@@ -21,15 +11,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const hintButton = document.getElementById('hint-button');
     const hintCard = document.getElementById('hint-card');
     const hintText = document.getElementById('hint-text');
-    const streakCounter = document.getElementById('streak-counter');
     const mascot = document.getElementById('mascot');
     const exampleContainer = document.getElementById('example-container');
     const exampleText = document.getElementById('example-text');
     let exampleInterval = null;
 
-    // Return early if we're not on the quiz page
-    if (!questionText) return;
-    
     // Mascot Animation Manager
     const animationManager = {
         mascot: mascot,
@@ -66,14 +52,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     this.frameIndex = 0; // Loop for idle
                 }
-                this.mascot.src = `./static/${frames[this.frameIndex]}`;
+                this.mascot.src = frames[this.frameIndex]; // Use the full path directly from the data attribute
                 this.frameIndex++;
             }, speed);
         },
 
         playCorrect: function() {
             // Show rocket with flames, then trigger CSS animation
-            this.mascot.src = './static/mascot_correct_1.png';
+            this.mascot.src = './static/mascot_correct_1.png'; // This is a static first frame, path is known
             this.mascot.classList.add('blast-off');
         },
         
@@ -190,14 +176,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         for (let i = 0; i < numRockets; i++) {
             const rocket = document.createElement('img');
-            rocket.src = './static/mini_rocket.png';
+            rocket.src = './static/mini_rocket.png'; // This path is also static and known
             rocket.className = 'mini-rocket';
             rocket.style.top = `${(i * laneHeight) + (laneHeight / 2) - 12}px`;
 
             if (i % 2 === 0) {
                 rocket.classList.add('fly-right');
             } else {
-                rocket.classList.add('fly-left');
+                rocket.classList.add('fly-left', 'flipped');
             }
             
             overlay.appendChild(rocket);

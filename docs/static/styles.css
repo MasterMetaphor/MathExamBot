@@ -250,6 +250,10 @@ h1 {
     will-change: transform;
 }
 
+.mini-rocket.flipped {
+    transform: scaleX(-1);
+}
+
 .fly-left {
     animation: flyLeft 10s linear forwards;
 }
