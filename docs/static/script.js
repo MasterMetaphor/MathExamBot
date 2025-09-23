@@ -56,14 +56,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     this.frameIndex = 0; // Loop for idle
                 }
-                this.mascot.src = `/static/${frames[this.frameIndex]}`;
+                this.mascot.src = `./static/${frames[this.frameIndex]}`; // Use relative path for docs folder
                 this.frameIndex++;
             }, speed);
         },
 
         playCorrect: function() {
             // Show rocket with flames, then trigger CSS animation
-            this.mascot.src = '/static/mascot_correct_1.png';
+            this.mascot.src = './static/mascot_correct_1.png'; // Use relative path for docs folder
             this.mascot.classList.add('blast-off');
         },
         
@@ -207,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const topPos = rToLLanes.splice(laneIndex, 1)[0];
             rocket.style.top = `${topPos}px`;
 
-            rocket.src = '/static/mascot_mini_rocket_left.png';
+            rocket.src = './static/mascot_mini_rocket_left.png';
             rocket.classList.add('fly-left');
             overlay.appendChild(rocket);
         }
@@ -224,7 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const topPos = lToRLanes.splice(laneIndex, 1)[0];
             rocket.style.top = `${topPos}px`;
             
-            rocket.src = '/static/mascot_mini_rocket_right.png';
+            rocket.src = './static/mascot_mini_rocket_right.png';
             rocket.classList.add('fly-right');
             overlay.appendChild(rocket);
         }
