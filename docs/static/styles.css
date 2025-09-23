@@ -250,36 +250,22 @@ h1 {
     will-change: transform;
 }
 
-.mini-rocket.flipped {
-    transform: scaleX(-1);
-}
-
 .fly-left {
-    animation: flyLeft 10s linear forwards;
+    animation: flyLeft 5s linear forwards;
 }
 
 .fly-right {
-    animation: flyRight 10s linear forwards;
+    animation: flyRight 5s linear forwards;
 }
 
 @keyframes flyLeft {
-    0% { transform: translateX(110vw) translateY(0) scaleX(-1); }
-    15% { transform: translateX(80vw) translateY(-40px) scaleX(-1); }
-    30% { transform: translateX(50vw) translateY(40px) scaleX(-1); }
-    45% { transform: translateX(20vw) translateY(-40px) scaleX(-1); }
-    60% { transform: translateX(-10vw) translateY(40px) scaleX(-1); }
-    75% { transform: translateX(-40vw) translateY(-40px) scaleX(-1); }
-    100% { transform: translateX(-70vw) translateY(0) scaleX(-1); }
+    0% { transform: translateX(80vw); }
+    100% { transform: translateX(-100vw); }
 }
 
 @keyframes flyRight {
-    0% { transform: translateX(-50vw) translateY(0); }
-    15% { transform: translateX(-20vw) translateY(40px); }
-    30% { transform: translateX(10vw) translateY(-40px); }
-    45% { transform: translateX(40vw) translateY(40px); }
-    60% { transform: translateX(70vw) translateY(-40px); }
-    75% { transform: translateX(100vw) translateY(40px); }
-    100% { transform: translateX(130vw) translateY(0); }
+    0% { transform: translateX(-150vw); }
+    100% { transform: translateX(110vw); }
 }
 
 /* --- Mobile Responsiveness --- */

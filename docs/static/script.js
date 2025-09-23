@@ -1,7 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
     const questionText = document.getElementById('question-text');
-    if (!questionText) return; // Only run if we are on the quiz page
-
     const optionsContainer = document.getElementById('options-container');
     const feedbackCard = document.getElementById('feedback-card');
     const feedbackText = document.getElementById('feedback-text');
@@ -11,15 +9,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const hintButton = document.getElementById('hint-button');
     const hintCard = document.getElementById('hint-card');
     const hintText = document.getElementById('hint-text');
+    const streakCounter = document.getElementById('streak-counter');
     const mascot = document.getElementById('mascot');
     const exampleContainer = document.getElementById('example-container');
     const exampleText = document.getElementById('example-text');
-    let exampleInterval = null;
-
-    // Button containers for moving the 'Next' button
     const nextButtonContainerTop = document.getElementById('next-button-container-top');
     const bottomButtonContainer = document.getElementById('bottom-button-container');
+    let exampleInterval = null;
 
+    // Return early if we're not on the quiz page
+    if (!questionText) return;
+    
     // Mascot Animation Manager
     const animationManager = {
         mascot: mascot,
@@ -56,14 +56,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     this.frameIndex = 0; // Loop for idle
                 }
-                this.mascot.src = frames[this.frameIndex]; // Use the full path directly from the data attribute
+                this.mascot.src = `/static/${frames[this.frameIndex]}`;
                 this.frameIndex++;
             }, speed);
         },
 
         playCorrect: function() {
             // Show rocket with flames, then trigger CSS animation
-            this.mascot.src = './static/mascot_correct_1.png'; // This is a static first frame, path is known
+            this.mascot.src = '/static/mascot_correct_1.png';
             this.mascot.classList.add('blast-off');
         },
         
@@ -77,10 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
             this.setAnimation('idle');
         }
     };
-    
-    if (questionText) { // Only run quiz logic if we are on the quiz page
-        animationManager.play();
-    }
+    animationManager.play();
 
 
     let currentQuestion = null;
@@ -108,14 +105,16 @@ document.addEventListener('DOMContentLoaded', () => {
         exampleContainer.style.display = 'none';
         exampleText.textContent = '';
 
-        // Move the next button back to the bottom container
-        if (nextButton) {
-            bottomButtonContainer.appendChild(nextButton);
-            nextButtonContainerTop.style.display = 'none';
-        }
-
         nextButton.disabled = true;
         hintButton.disabled = false;
+
+        // Reset next button to its original bottom position
+        if (nextButtonContainerTop) {
+            nextButtonContainerTop.style.display = 'none';
+        }
+        if (bottomButtonContainer && nextButton) {
+            bottomButtonContainer.appendChild(nextButton);
+        }
 
         questionText.textContent = currentQuestion.question;
         optionsContainer.innerHTML = '';
@@ -128,6 +127,12 @@ document.addEventListener('DOMContentLoaded', () => {
             button.addEventListener('click', handleAnswer);
             optionsContainer.appendChild(button);
         });
+
+        // Move next button to appear above the options
+        if (nextButtonContainerTop && nextButton) {
+            nextButtonContainerTop.appendChild(nextButton);
+            nextButtonContainerTop.style.display = 'flex';
+        }
     }
 
     function handleAnswer(event) {
@@ -172,12 +177,6 @@ document.addEventListener('DOMContentLoaded', () => {
         hintCard.style.display = 'none';
         nextButton.disabled = false;
         hintButton.disabled = true;
-
-        // Move the next button to the top container
-        if (nextButton) {
-            nextButtonContainerTop.appendChild(nextButton);
-            nextButtonContainerTop.style.display = 'block';
-        }
     }
 
     function playBonusAnimation() {
@@ -186,31 +185,55 @@ document.addEventListener('DOMContentLoaded', () => {
 
         overlay.style.display = 'block';
         const screenHeight = window.innerHeight;
-        const isMobile = window.innerWidth <= 600;
-        const numRockets = isMobile ? 8 : 16;
-        const laneHeight = screenHeight / numRockets;
+        const numLanes = 8; // 8 lanes for each direction
+        const laneHeight = screenHeight / numLanes;
 
-        for (let i = 0; i < numRockets; i++) {
-            const rocket = document.createElement('img');
-            rocket.src = './static/mini_rocket.png'; // This path is also static and known
-            rocket.className = 'mini-rocket';
-            rocket.style.top = `${(i * laneHeight) + (laneHeight / 2) - 12}px`;
+        // Create two independent pools of lanes
+        let rToLLanes = Array.from({length: numLanes}, (_, i) => (i * laneHeight) + (laneHeight / 2) - 12);
+        let lToRLanes = Array.from({length: numLanes}, (_, i) => (i * laneHeight) + (laneHeight / 2) - 12);
+        
+        const skipLtoR = [1, 3, 5, 7];
+        const skipRtoL = [2, 4, 6, 8];
 
-            if (i % 2 === 0) {
-                rocket.classList.add('fly-right');
-            } else {
-                rocket.classList.add('fly-left', 'flipped');
-            }
+        // Create R->L ships (top half of loop)
+        for (let i = 1; i <= numLanes; i++) {
+            if (skipRtoL.includes(i)) continue;
             
-            overlay.appendChild(rocket);
+            const rocket = document.createElement('img');
+            rocket.className = 'mini-rocket';
+            
+            // Pick a random lane and remove it
+            const laneIndex = Math.floor(Math.random() * rToLLanes.length);
+            const topPos = rToLLanes.splice(laneIndex, 1)[0];
+            rocket.style.top = `${topPos}px`;
 
-            setTimeout(() => {
-                rocket.remove();
-                if (overlay.childElementCount === 0) {
-                    overlay.style.display = 'none';
-                }
-            }, 10000);
+            rocket.src = '/static/mascot_mini_rocket_left.png';
+            rocket.classList.add('fly-left');
+            overlay.appendChild(rocket);
         }
+
+        // Create L->R ships (bottom half of loop)
+        for (let i = 1; i <= numLanes; i++) {
+            if (skipLtoR.includes(i)) continue;
+            
+            const rocket = document.createElement('img');
+            rocket.className = 'mini-rocket';
+
+            // Pick a random lane and remove it
+            const laneIndex = Math.floor(Math.random() * lToRLanes.length);
+            const topPos = lToRLanes.splice(laneIndex, 1)[0];
+            rocket.style.top = `${topPos}px`;
+            
+            rocket.src = '/static/mascot_mini_rocket_right.png';
+            rocket.classList.add('fly-right');
+            overlay.appendChild(rocket);
+        }
+
+        setTimeout(() => {
+            // Clear all rockets at once
+            overlay.innerHTML = '';
+            overlay.style.display = 'none';
+        }, 5500);
     }
 
     function updateStats() {
@@ -246,21 +269,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 150); // Typing speed
     }
 
-    if (nextButton) { // Check if nextButton exists before adding listener
-        nextButton.addEventListener('click', getQuestion);
-    }
-    if (hintButton) { // Check if hintButton exists before adding listener
-        hintButton.addEventListener('click', showHint);
-    }
+    nextButton.addEventListener('click', getQuestion);
+    hintButton.addEventListener('click', showHint);
 
-    // Initial load for quiz page
-    if (questionText) {
-        getQuestion();
-    }
+    // Initial load
+    getQuestion();
 
     // PWA Service Worker Registration
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./service-worker.js')
+        navigator.serviceWorker.register('/service-worker.js')
             .then((reg) => console.log('Service worker registered.', reg))
             .catch((err) => console.log('Service worker not registered.', err));
     }
