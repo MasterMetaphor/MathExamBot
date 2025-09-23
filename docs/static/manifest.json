@@ -1,21 +1,25 @@
 {
   "name": "Math 1530 Question Bot",
   "short_name": "Math Bot",
-  "start_url": "/",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#007bff",
   "description": "A study app for Math 1530 with practice questions.",
   "icons": [
     {
-      "src": "/static/icon-192.png",
+      "src": "./static/icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/static/icon-512.png",
+      "src": "./static/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
-  ]
+  ],
+  "orientation": "portrait",
+  "scope": "./",
+  "lang": "en-US",
+  "prefer_related_applications": false
 }

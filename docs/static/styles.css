@@ -307,11 +307,15 @@ h1 {
     .button {
         padding: 12px 20px;
         font-size: 16px;
+        /* Improve tap targets for mobile */
+        min-height: 44px;
     }
     
     .options-container .button {
         padding: 12px;
         font-size: 15px;
+        /* Ensure good tap target size */
+        min-height: 44px;
     }
 
     .card {
@@ -324,5 +328,49 @@ h1 {
 
     .button-container {
         flex-direction: column;
+    }
+}
+
+/* --- iOS Specific Styles --- */
+@supports (-webkit-touch-callout: none) {
+    /* iOS specific styles */
+    body {
+        /* Prevent elastic scrolling */
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Fix for iOS notch */
+    .container {
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+    }
+
+    /* Disable text selection */
+    * {
+        -webkit-user-select: none;
+        user-select: none;
+    }
+
+    /* Allow text selection in question and feedback */
+    #question-text, #feedback-text, #ti84-text, #example-text {
+        -webkit-user-select: text;
+        user-select: text;
+    }
+
+    /* Improve button touch feedback */
+    .button:active {
+        transform: scale(0.98);
+        transition: transform 0.1s;
+    }
+
+    /* Fix for iOS Safari 100vh issue */
+    .container {
+        min-height: -webkit-fill-available;
     }
 }

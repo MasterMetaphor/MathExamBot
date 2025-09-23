@@ -57,14 +57,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     this.frameIndex = 0; // Loop for idle
                 }
-                this.mascot.src = `./static/${frames[this.frameIndex]}`; // Use relative path for GitHub Pages
+                this.mascot.src = `./static/${frames[this.frameIndex]}`; // Standard relative path format
                 this.frameIndex++;
             }, speed);
         },
 
         playCorrect: function() {
             // Show rocket with flames, then trigger CSS animation
-            this.mascot.src = './static/mascot_correct_1.png'; // Use relative path for GitHub Pages
+            this.mascot.src = './static/mascot_correct_1.png'; // Standard relative path format
             this.mascot.classList.add('blast-off');
         },
         
@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const topPos = rToLLanes.splice(laneIndex, 1)[0];
             rocket.style.top = `${topPos}px`;
 
-            rocket.src = './static/alien.png'; // Use alien image instead of rocket
+            rocket.src = './static/alien.png'; // Standard relative path format
             rocket.classList.add('fly-left');
             overlay.appendChild(rocket);
         }
@@ -235,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const topPos = lToRLanes.splice(laneIndex, 1)[0];
             rocket.style.top = `${topPos}px`;
             
-            rocket.src = './static/alien.png'; // Use alien image instead of rocket
+            rocket.src = './static/alien.png'; // Standard relative path format
             rocket.classList.add('fly-right');
             overlay.appendChild(rocket);
         }
@@ -297,8 +297,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // PWA Service Worker Registration
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./service-worker.js') // Use relative path for GitHub Pages
+        navigator.serviceWorker.register('./service-worker.js') // Standard relative path
             .then((reg) => console.log('Service worker registered.', reg))
             .catch((err) => console.log('Service worker not registered.', err));
     }
 });
+
