@@ -16,6 +16,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const exampleText = document.getElementById('example-text');
     let exampleInterval = null;
 
+    // Button containers for moving the 'Next' button
+    const nextButtonContainerTop = document.getElementById('next-button-container-top');
+    const bottomButtonContainer = document.getElementById('bottom-button-container');
+
     // Mascot Animation Manager
     const animationManager = {
         mascot: mascot,
@@ -104,6 +108,12 @@ document.addEventListener('DOMContentLoaded', () => {
         exampleContainer.style.display = 'none';
         exampleText.textContent = '';
 
+        // Move the next button back to the bottom container
+        if (nextButton) {
+            bottomButtonContainer.appendChild(nextButton);
+            nextButtonContainerTop.style.display = 'none';
+        }
+
         nextButton.disabled = true;
         hintButton.disabled = false;
 
@@ -162,6 +172,12 @@ document.addEventListener('DOMContentLoaded', () => {
         hintCard.style.display = 'none';
         nextButton.disabled = false;
         hintButton.disabled = true;
+
+        // Move the next button to the top container
+        if (nextButton) {
+            nextButtonContainerTop.appendChild(nextButton);
+            nextButtonContainerTop.style.display = 'block';
+        }
     }
 
     function playBonusAnimation() {

@@ -24,6 +24,9 @@
         <div class="card">
             <p id="question-text">Loading question...</p>
         </div>
+        <div id="next-button-container-top" class="button-container" style="margin-bottom: 20px; display: none;">
+            <!-- Next button will appear here after an answer is selected -->
+        </div>
         <div id="options-container" class="options-container">
             <!-- Options will be dynamically inserted here -->
         </div>
@@ -39,7 +42,7 @@
             <p id="hint-text"></p>
         </div>
         <div id="bonus-animation-overlay" style="display: none;"></div>
-        <div class="button-container">
+        <div class="button-container" id="bottom-button-container">
             <button id="hint-button" class="button secondary">Hint</button>
             <button id="next-button" class="button" disabled>Next Question</button>
         </div>
