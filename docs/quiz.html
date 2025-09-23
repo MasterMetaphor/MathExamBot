@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math 1530 Question Bot</title>
+    <link rel="stylesheet" href="./static/styles.css">
+    <link rel="manifest" href="./static/manifest.json">
+    <meta name="theme-color" content="#007bff">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="stats" id="stats-label">
+                <span>Streak: 0</span>
+            </div>
+            <a href="./index.html" class="button back-button">← Back</a>
+        </div>
+        <img src="static/mascot_idle_1.png" alt="Mascot" id="mascot"
+             data-idle-frames="['mascot_idle_1.png', 'mascot_idle_2.png']"
+             data-correct-frames="['mascot_correct_1.png', 'mascot_correct_2.png', 'mascot_correct_3.png', 'mascot_correct_4.png']"
+             data-incorrect-frames="['mascot_incorrect_1.png', 'mascot_incorrect_2.png', 'mascot_incorrect_3.png', 'mascot_incorrect_4.png']">
+        <h1>Math 1530 Question Bot</h1>
+        <div class="card">
+            <p id="question-text">Loading question...</p>
+        </div>
+        <div id="next-button-container-top" class="button-container" style="margin-bottom: 20px; display: none;">
+            <!-- Next button will appear here after an answer is selected -->
+        </div>
+        <div id="options-container" class="options-container">
+            <!-- Options will be dynamically inserted here -->
+        </div>
+        <div class="card feedback" id="feedback-card" style="display: none;">
+            <p id="feedback-text"></p>
+            <pre id="ti84-text"></pre>
+            <div id="example-container" style="display: none;">
+                <p class="example-label">Example in practice:</p>
+                <pre id="example-text" class="calculator-screen"></pre>
+            </div>
+        </div>
+        <div class="card" id="hint-card" style="display: none;">
+            <p id="hint-text"></p>
+        </div>
+        <div id="bonus-animation-overlay" style="display: none;"></div>
+        <div class="button-container" id="bottom-button-container">
+            <button id="hint-button" class="button secondary">Hint</button>
+            <button id="next-button" class="button" disabled>Next Question</button>
+        </div>
+
+    </div>
+
+    <script src="./static/question-bank.js"></script>
+    <script src="./static/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math 1530 Question Bot</title>
+    <link rel="stylesheet" href="./static/styles.css">
+    <link rel="manifest" href="./static/manifest.json">
+    <meta name="theme-color" content="#007bff">
+</head>
+<body>
+    <div class="container">
+        <img src="./static/mascot_idle_1.png" alt="Mascot" id="mascot"
+             data-frames="['mascot_idle_1.png', 'mascot_idle_2.png']">
+        <h1>Welcome to the Math 1530 Bot!</h1>
+        <p class="subtitle">Ready to practice for your exam?</p>
+        <div class="start-buttons">
+            <a href="./quiz.html" class="button">Start Random Quiz</a>
+            <a href="./topics.html" class="button secondary">Choose by Question Type</a>
+        </div>
+    </div>
+    <script>
+        const mascot = document.getElementById('mascot');
+        if (mascot) {
+            const frames = JSON.parse(mascot.dataset.frames.replace(/'/g, '"'));
+            let currentFrame = 0;
+            setInterval(() => {
+                currentFrame = (currentFrame + 1) % frames.length;
+                mascot.src = `static/${frames[currentFrame]}`;
+            }, 500);
+        }
+    </script>
+</body>
+</html>
