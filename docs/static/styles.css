@@ -1,0 +1,320 @@
+:root {
+    --bg-color: #f0f2f5;
+    --card-bg: #ffffff;
+    --text-color: #1c1e21;
+    --primary-color: #007bff;
+    --button-hover: #0056b3;
+    --correct-bg: #e9f5e9;
+    --correct-border: #a8d5a8;
+    --incorrect-bg: #fdeeee;
+    --incorrect-border: #f8c2c2;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #121212;
+        --card-bg: #1e1e1e;
+        --text-color: #e0e0e0;
+        --primary-color: #4dabf7;
+        --button-hover: #1e88e5;
+        --correct-bg: #1a3e1a;
+        --correct-border: #3c763d;
+        --incorrect-bg: #4d1f1f;
+        --incorrect-border: #a94442;
+    }
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+#mascot {
+    max-width: 150px;
+    margin-bottom: 10px;
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+.blast-off {
+    animation: blastOff 0.5s ease-in forwards;
+}
+
+@keyframes blastOff {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-200px);
+        opacity: 0;
+    }
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.stats {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.back-button {
+    background-color: #6c757d;
+    padding: 8px 15px;
+    font-size: 16px;
+}
+
+.subtitle {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.start-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+.topic-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.topic-button {
+    width: 100%;
+    max-width: 400px;
+}
+
+.back-button {
+    background-color: #6c757d;
+}
+
+.container {
+    max-width: 800px;
+    width: 100%;
+    text-align: center;
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.card {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: left;
+}
+
+.options-container .button {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 15px;
+    font-size: 16px;
+    text-align: center;
+    border: 1px solid transparent;
+    cursor: pointer;
+}
+
+.button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 15px 25px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.button:hover:not(:disabled) {
+    background-color: var(--button-hover);
+}
+
+.button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.feedback {
+    display: none; /* Hidden by default */
+}
+
+.feedback p {
+    margin-top: 0;
+}
+
+.feedback pre {
+    background-color: var(--bg-color);
+    padding: 10px;
+    border-radius: 4px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: "SF Mono", "Menlo", "Monaco", monospace;
+    font-size: 14px;
+}
+
+.example-label {
+    margin: 15px 0 5px;
+    font-weight: bold;
+    color: #666;
+}
+
+.calculator-screen {
+    background-color: #383838; /* Darker screen for high contrast */
+    color: #FFEB3B; /* A very bright, vibrant yellow */
+    font-family: monospace;
+    font-size: 16px; /* Larger font size */
+    padding: 15px;
+    border-radius: 4px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    min-height: 80px;
+}
+
+.correct {
+    background-color: var(--correct-bg);
+    border-color: var(--correct-border);
+}
+
+.incorrect {
+    background-color: var(--incorrect-bg);
+    border-color: var(--incorrect-border);
+}
+
+#hint-card {
+    background-color: #f7f6e8; /* Muted yellow */
+    border: 1px solid #dcdacb; /* Darker border */
+    color: #5d5c55; /* Darker text */
+}
+
+.button-container {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.button.secondary {
+    background-color: #6c757d;
+}
+
+.button.secondary:hover:not(:disabled) {
+    background-color: #5a6268;
+}
+
+.back-link {
+    display: block;
+    margin-top: 25px;
+    text-align: center;
+    color: #888;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+#bonus-animation-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 100;
+}
+
+.mini-rocket {
+    position: absolute;
+    will-change: transform;
+}
+
+.fly-left {
+    animation: flyLeft 10s linear forwards;
+}
+
+.fly-right {
+    animation: flyRight 10s linear forwards;
+}
+
+@keyframes flyLeft {
+    0% { transform: translateX(110vw) translateY(0) scaleX(-1); }
+    15% { transform: translateX(80vw) translateY(-40px) scaleX(-1); }
+    30% { transform: translateX(50vw) translateY(40px) scaleX(-1); }
+    45% { transform: translateX(20vw) translateY(-40px) scaleX(-1); }
+    60% { transform: translateX(-10vw) translateY(40px) scaleX(-1); }
+    75% { transform: translateX(-40vw) translateY(-40px) scaleX(-1); }
+    100% { transform: translateX(-70vw) translateY(0) scaleX(-1); }
+}
+
+@keyframes flyRight {
+    0% { transform: translateX(-50vw) translateY(0); }
+    15% { transform: translateX(-20vw) translateY(40px); }
+    30% { transform: translateX(10vw) translateY(-40px); }
+    45% { transform: translateX(40vw) translateY(40px); }
+    60% { transform: translateX(70vw) translateY(-40px); }
+    75% { transform: translateX(100vw) translateY(40px); }
+    100% { transform: translateX(130vw) translateY(0); }
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        max-width: 100%;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    .stats {
+        font-size: 16px;
+    }
+
+    .button {
+        padding: 12px 20px;
+        font-size: 16px;
+    }
+    
+    .options-container .button {
+        padding: 12px;
+        font-size: 15px;
+    }
+
+    .card {
+        padding: 15px;
+    }
+
+    #mascot {
+        max-width: 100px;
+    }
+
+    .button-container {
+        flex-direction: column;
+    }
+}
