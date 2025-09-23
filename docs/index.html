@@ -19,16 +19,6 @@
             <a href="./topics.html" class="button secondary">Choose by Question Type</a>
         </div>
     </div>
-    <script>
-        const mascot = document.getElementById('mascot');
-        if (mascot) {
-            const frames = JSON.parse(mascot.dataset.frames.replace(/'/g, '"'));
-            let currentFrame = 0;
-            setInterval(() => {
-                currentFrame = (currentFrame + 1) % frames.length;
-                mascot.src = `./static/${frames[currentFrame]}`;
-            }, 500);
-        }
-    </script>
+    <script src="./static/script.js"></script>
 </body>
 </html>

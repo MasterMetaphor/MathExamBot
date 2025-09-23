@@ -1,4 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Start Page Mascot Animation ---
+    const startPageMascot = document.getElementById('mascot');
+    if (startPageMascot && startPageMascot.dataset.frames) {
+        const frames = JSON.parse(startPageMascot.dataset.frames.replace(/'/g, '"'));
+        let currentFrame = 0;
+        setInterval(() => {
+            currentFrame = (currentFrame + 1) % frames.length;
+            startPageMascot.src = `./static/${frames[currentFrame]}`;
+        }, 500);
+    }
+
+    // --- Quiz Page Logic ---
     const questionText = document.getElementById('question-text');
     const optionsContainer = document.getElementById('options-container');
     const feedbackCard = document.getElementById('feedback-card');
@@ -75,7 +87,10 @@ document.addEventListener('DOMContentLoaded', () => {
             this.setAnimation('idle');
         }
     };
-    animationManager.play();
+    
+    if (questionText) { // Only run quiz logic if we are on the quiz page
+        animationManager.play();
+    }
 
 
     let currentQuestion = null;
@@ -229,11 +244,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 150); // Typing speed
     }
 
-    nextButton.addEventListener('click', getQuestion);
-    hintButton.addEventListener('click', showHint);
+    if (nextButton) { // Check if nextButton exists before adding listener
+        nextButton.addEventListener('click', getQuestion);
+    }
+    if (hintButton) { // Check if hintButton exists before adding listener
+        hintButton.addEventListener('click', showHint);
+    }
 
-    // Initial load
-    getQuestion();
+    // Initial load for quiz page
+    if (questionText) {
+        getQuestion();
+    }
 
     // PWA Service Worker Registration
     if ('serviceWorker' in navigator) {
