@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose a Topic - Math 1530 Bot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Choose a Question Type</h1>
+        <div class="topic-list">
+            {% for type in question_types %}
+                <a href="{{ url_for('quiz_page', topic=type) }}" class="button topic-button">{{ type }}</a>
+            {% endfor %}
+        </div>
+        <a href="{{ url_for('start_page') }}" class="button back-button">Back to Start</a>
+    </div>
+</body>
+</html>
