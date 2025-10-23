@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose a Topic - Math 1530 Bot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Dark theme styles */
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Container */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Headings */
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #ffffff;
+        }
+        
+        h2 {
+            color: #e0e0e0;
+        }
+        
+        /* Exam category */
+        .exam-category {
+            margin: 20px 0;
+            border: 1px solid #444;
+            border-radius: 10px;
+            padding: 15px;
+            background-color: #121212;
+        }
+        
+        .exam-title {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: #64b5f6;
+            text-align: center;
+        }
+        
+        /* Topic list */
+        .topic-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        /* Topic button */
+        .topic-button {
+            margin: 5px;
+            padding: 12px 15px;
+            min-width: 200px;
+            background-color: #0d47a1;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        
+        .topic-button:hover {
+            background-color: #1565c0;
+            transform: translateY(-2px);
+        }
+        
+        /* Random topic button */
+        .random-topic {
+            background-color: #1a237e;
+            margin: 20px 0;
+            font-weight: bold;
+            display: block;
+            width: 80%;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Back button */
+        .back-button {
+            margin-top: 30px;
+            padding: 10px 20px;
+            background-color: #424242;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .back-button:hover {
+            background-color: #616161;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            {% if current_exam %}
+                {{ current_exam }} Topics
+            {% else %}
+                Choose a Question Type
+            {% endif %}
+        </h1>
+        
+        <div class="topic-list">
+            {% if current_exam == 'Exam 1' %}
+                {% for type in exam1_topics %}
+                    <a href="{{ url_for('quiz_page', topic=type, exam='Exam 1') }}" class="topic-button">{{ type }}</a>
+                {% endfor %}
+                <a href="{{ url_for('quiz_page', exam='Exam 1') }}" class="topic-button random-topic">Random Exam 1 Topic</a>
+            {% elif current_exam == 'Exam 2' %}
+                {% for type in exam2_topics %}
+                    <a href="{{ url_for('quiz_page', topic=type, exam='Exam 2') }}" class="topic-button">{{ type }}</a>
+                {% endfor %}
+                <a href="{{ url_for('quiz_page', exam='Exam 2') }}" class="topic-button random-topic">Random Exam 2 Topic</a>
+            {% else %}
+                <div class="exam-category">
+                    <h2 class="exam-title">Exam 1 Topics</h2>
+                    <div class="topic-list">
+                        {% for type in exam1_topics %}
+                            <a href="{{ url_for('quiz_page', topic=type, exam='Exam 1') }}" class="topic-button">{{ type }}</a>
+                        {% endfor %}
+                    </div>
+                    <a href="{{ url_for('quiz_page', exam='Exam 1') }}" class="topic-button random-topic">Random Exam 1 Topic</a>
+                </div>
+                
+                <div class="exam-category">
+                    <h2 class="exam-title">Exam 2 Topics</h2>
+                    <div class="topic-list">
+                        {% for type in exam2_topics %}
+                            <a href="{{ url_for('quiz_page', topic=type, exam='Exam 2') }}" class="topic-button">{{ type }}</a>
+                        {% endfor %}
+                    </div>
+                    <a href="{{ url_for('quiz_page', exam='Exam 2') }}" class="topic-button random-topic">Random Exam 2 Topic</a>
+                </div>
+            {% endif %}
+        </div>
+        
+        <a href="{{ url_for('exams_page') }}" class="back-button">Back to Exams</a>
+    </div>
+</body>
+</html>
