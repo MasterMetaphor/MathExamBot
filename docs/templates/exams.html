@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Exam - Math 1530 Bot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Dark theme styles */
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Container */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* Headings */
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #ffffff;
+        }
+        
+        /* Exam buttons */
+        .exam-button {
+            margin: 15px 0;
+            padding: 20px;
+            font-size: 1.2em;
+            width: 100%;
+            max-width: 300px;
+            background-color: #0d47a1;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        
+        .exam-button:hover {
+            background-color: #1565c0;
+            transform: translateY(-2px);
+        }
+        
+        .final-exam-button {
+            background-color: #bf360c;
+            margin-top: 25px;
+        }
+        
+        .final-exam-button:hover {
+            background-color: #e64a19;
+        }
+        
+        /* Back button */
+        .back-button {
+            margin-top: 30px;
+            padding: 10px 20px;
+            background-color: #424242;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .back-button:hover {
+            background-color: #616161;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Choose an Exam</h1>
+        
+        <a href="{{ url_for('topics_page', exam='Exam 1') }}" class="exam-button">Exam 1</a>
+        <a href="{{ url_for('topics_page', exam='Exam 2') }}" class="exam-button">Exam 2</a>
+        <a href="{{ url_for('quiz_page') }}" class="exam-button final-exam-button">Final Exam (All Topics)</a>
+        
+        <a href="{{ url_for('start_page') }}" class="back-button">Back to Start</a>
+    </div>
+</body>
+</html>

@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const questionText = document.getElementById('question-text');
+    const questionPlaceholder = document.getElementById('question-placeholder');
     const optionsContainer = document.getElementById('options-container');
     const feedbackCard = document.getElementById('feedback-card');
     const feedbackText = document.getElementById('feedback-text');
@@ -82,224 +83,231 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     let currentQuestion = null;
+    let previousQuestion = null;
+    let usedQuestions = []; // Track ALL used questions in this session
     let score = 0;
     let total = 0;
     let streak = 0;
     let multiplier = 1;
     const questionBank = new QuestionBank();
+    
+    // Initialize used questions from session storage if available
+    if (sessionStorage.getItem('usedQuestions')) {
+        usedQuestions = JSON.parse(sessionStorage.getItem('usedQuestions'));
+    }
 
     const urlParams = new URLSearchParams(window.location.search);
     const topic = urlParams.get('topic');
+    const examType = urlParams.get('exam'); // Exam type parameter
 
     function getQuestion() {
-        currentQuestion = questionBank.getNewQuestion(topic);
+        // Show loading spinner
+        if (questionPlaceholder) {
+            questionPlaceholder.classList.remove('hidden-element');
+        }
+        if (questionText) {
+            questionText.classList.add('hidden-element');
+        }
+        
+        // Store the current question as previous before getting a new one
+        previousQuestion = currentQuestion;
+        
+        // Generate a new question, ensuring it's not used before in this session
+        let attempts = 0;
+        let newQuestion;
+        do {
+            newQuestion = questionBank.getNewQuestion(topic, examType);
+            attempts++;
+            
+            // Break after 20 attempts to prevent infinite loops
+            if (attempts > 20) {
+                // If we've used all questions, reset the used list
+                usedQuestions = [];
+                sessionStorage.removeItem('usedQuestions');
+                newQuestion = questionBank.getNewQuestion(topic, examType);
+                break;
+            }
+            
+        } while (
+            // Check if this exact question has been used before
+            usedQuestions.some(used => 
+                used.question === newQuestion.question && 
+                used.options && 
+                JSON.stringify(used.options) === JSON.stringify(newQuestion.options)
+            )
+        );
+        
+        // Update current question
+        currentQuestion = newQuestion;
+        
+        // Add to used questions list
+        usedQuestions.push({
+            question: currentQuestion.question,
+            options: currentQuestion.options,
+            correct: currentQuestion.correct
+        });
+        
+        // Save to session storage
+        sessionStorage.setItem('usedQuestions', JSON.stringify(usedQuestions));
+        
+        // Render the question immediately after getting it
         displayQuestion();
         animationManager.reset();
+        
+        // Remove loading spinner
+        if (questionPlaceholder) {
+            questionPlaceholder.classList.add('hidden-element');
+        }
+        if (questionText) {
+            questionText.classList.remove('hidden-element');
+        }
     }
 
     function displayQuestion() {
-        feedbackCard.style.display = 'none';
-        hintCard.style.display = 'none';
-        
-        // Explicitly hide and clear the previous question's example
-        if (exampleInterval) clearInterval(exampleInterval);
-        exampleContainer.style.display = 'none';
-        exampleText.textContent = '';
+        if (!currentQuestion) return;
 
-        hintButton.disabled = false;
-
-        // --- Button Visibility Logic ---
-        // 1. Show Skip button, hide Next button
-        skipButton.style.display = 'block';
-        nextButton.style.display = 'none';
-        nextButton.disabled = true; // Ensure Next is disabled
-
-        // 2. Reset Next button to its original bottom position for when it reappears
-        if (nextButtonContainerTop) {
-            nextButtonContainerTop.style.display = 'none';
-        }
-        if (bottomButtonContainer && nextButton) {
-            bottomButtonContainer.appendChild(nextButton);
-        }
-
-        questionText.textContent = currentQuestion.question;
+        questionText.innerHTML = currentQuestion.question;
         optionsContainer.innerHTML = '';
 
         currentQuestion.options.forEach((option, index) => {
             const button = document.createElement('button');
+            button.classList.add('option-button');
+            button.classList.add('hover-effect');
             button.textContent = option;
-            button.classList.add('button');
             button.dataset.index = index;
-            button.addEventListener('click', handleAnswer);
+            button.addEventListener('click', checkAnswer);
             optionsContainer.appendChild(button);
         });
+
+        feedbackCard.classList.add('hidden');
+        hintCard.classList.add('hidden');
+        exampleContainer.classList.add('hidden');
+        nextButtonContainerTop.classList.add('hidden');
+        
+        updateStats();
     }
 
-    function handleAnswer(event) {
-        const selectedIndex = parseInt(event.target.dataset.index, 10);
+    function checkAnswer(event) {
+        const selectedIndex = parseInt(event.target.dataset.index);
         const isCorrect = selectedIndex === currentQuestion.correct;
         
-        total++;
-        if (isCorrect) {
-            score++;
-            streak++;
-            if (streak > 0 && streak % 5 === 0) {
-                multiplier = Math.min(10, multiplier + 1);
-                playBonusAnimation();
+        // Disable all buttons to prevent multiple answers
+        const buttons = document.querySelectorAll('.option-button');
+        buttons.forEach(button => {
+            button.disabled = true;
+            button.classList.remove('hover-effect');
+            
+            // Highlight correct and incorrect answers
+            const index = parseInt(button.dataset.index);
+            if (index === currentQuestion.correct) {
+                button.classList.add('correct-answer');
+            } else if (index === selectedIndex) {
+                button.classList.add('incorrect-answer');
             }
+        });
+
+        // Show feedback
+        feedbackCard.classList.remove('hidden');
+        feedbackText.textContent = currentQuestion.explanation;
+        
+        // Check for TI-84 calculator steps
+        if (currentQuestion.ti84) {
+            ti84Text.textContent = currentQuestion.ti84;
+            document.getElementById('ti84-section').classList.remove('hidden');
+        } else {
+            document.getElementById('ti84-section').classList.add('hidden');
+        }
+
+        // Show calculator example if available
+        if (currentQuestion.example) {
+            exampleContainer.classList.remove('hidden');
+            displayCalculatorExample(currentQuestion.example);
+        }
+        
+        // Update stats
+        if (isCorrect) {
+            score += 1 * multiplier;
+            streak += 1;
+            multiplier = Math.min(5, streak > 3 ? Math.floor(streak / 3) : 1);
             animationManager.setAnimation('correct');
         } else {
             streak = 0;
             multiplier = 1;
             animationManager.setAnimation('incorrect');
         }
-
+        total += 1;
         updateStats();
 
-        feedbackText.textContent = isCorrect ? `✅ Correct! ${currentQuestion.explanation}` : `❌ Incorrect. ${currentQuestion.explanation}`;
-        ti84Text.textContent = currentQuestion.ti84_steps;
+        // Show next button
+        nextButtonContainerTop.classList.remove('hidden');
+        bottomButtonContainer.classList.add('hidden');
+    }
+
+    function displayCalculatorExample(example) {
+        if (!example) return;
         
-        const optionButtons = optionsContainer.querySelectorAll('.button');
-        optionButtons.forEach((button, index) => {
-            button.disabled = true;
-            if (index === currentQuestion.correct) {
-                button.classList.add('correct');
-            } else if (index === selectedIndex) {
-                button.classList.add('incorrect');
+        // Split steps and show one by one with delay
+        const lines = example.split('\\n');
+        let currentLine = 0;
+        
+        // Clear any existing interval
+        if (exampleInterval) clearInterval(exampleInterval);
+        
+        exampleText.textContent = '';
+        
+        exampleInterval = setInterval(() => {
+            if (currentLine < lines.length) {
+                exampleText.textContent += lines[currentLine] + '\n';
+                currentLine++;
+            } else {
+                clearInterval(exampleInterval);
             }
-        });
-        
-        // --- Button Visibility Logic ---
-        // 1. Hide Skip button, show Next button
-        skipButton.style.display = 'none';
-        nextButton.style.display = 'block';
-        nextButton.disabled = false;
-
-        // 2. Move Next button to appear above the options
-        if (nextButtonContainerTop && nextButton) {
-            nextButtonContainerTop.appendChild(nextButton);
-            nextButtonContainerTop.style.display = 'flex';
-        }
-
-        if (currentQuestion.example) {
-            animateExample(currentQuestion.example);
-        }
-
-        feedbackCard.style.display = 'block';
-        hintCard.style.display = 'none';
-        hintButton.disabled = true;
-    }
-
-    function playBonusAnimation() {
-        const overlay = document.getElementById('bonus-animation-overlay');
-        if (!overlay) return;
-
-        overlay.style.display = 'block';
-        const screenHeight = window.innerHeight;
-        const numLanes = 8; // 8 lanes for each direction
-        const laneHeight = screenHeight / numLanes;
-
-        // Create two independent pools of lanes
-        let rToLLanes = Array.from({length: numLanes}, (_, i) => (i * laneHeight) + (laneHeight / 2) - 12);
-        let lToRLanes = Array.from({length: numLanes}, (_, i) => (i * laneHeight) + (laneHeight / 2) - 12);
-        
-        const skipLtoR = [1, 3, 5, 7];
-        const skipRtoL = [2, 4, 6, 8];
-
-        // Create R->L ships (top half of loop)
-        for (let i = 1; i <= numLanes; i++) {
-            if (skipRtoL.includes(i)) continue;
-            
-            const rocket = document.createElement('img');
-            rocket.className = 'mini-rocket';
-            
-            // Pick a random lane and remove it
-            const laneIndex = Math.floor(Math.random() * rToLLanes.length);
-            const topPos = rToLLanes.splice(laneIndex, 1)[0];
-            rocket.style.top = `${topPos}px`;
-
-            rocket.src = './static/alien.png'; // Standard relative path format
-            rocket.classList.add('fly-left');
-            overlay.appendChild(rocket);
-        }
-
-        // Create L->R ships (bottom half of loop)
-        for (let i = 1; i <= numLanes; i++) {
-            if (skipLtoR.includes(i)) continue;
-            
-            const rocket = document.createElement('img');
-            rocket.className = 'mini-rocket';
-
-            // Pick a random lane and remove it
-            const laneIndex = Math.floor(Math.random() * lToRLanes.length);
-            const topPos = lToRLanes.splice(laneIndex, 1)[0];
-            rocket.style.top = `${topPos}px`;
-            
-            rocket.src = './static/alien.png'; // Standard relative path format
-            rocket.classList.add('fly-right');
-            overlay.appendChild(rocket);
-        }
-
-        setTimeout(() => {
-            // Clear all rockets at once
-            overlay.innerHTML = '';
-            overlay.style.display = 'none';
-        }, 5500);
-    }
-
-    function skipQuestion() {
-        // Skipping doesn't affect the score, but it does break the streak.
-        streak = 0;
-        multiplier = 1;
-        updateStats();
-        getQuestion(); // This generates a new question
+        }, 800);
     }
 
     function updateStats() {
-        statsLabel.querySelector('span').textContent = `Streak: ${streak} (X${multiplier})`;
+        statsLabel.textContent = `Score: ${score} / ${total}`;
+        streakCounter.textContent = streak > 0 ? `${streak} 🔥 (${multiplier}x)` : '';
     }
 
-    function showHint() {
-        if (!currentQuestion || !currentQuestion.hint) return;
-        hintText.textContent = `💡 ${currentQuestion.hint}`;
-        hintCard.style.display = 'block';
-        hintButton.disabled = true;
-    }
-
-    function animateExample(text) {
-        if (exampleInterval) clearInterval(exampleInterval);
-        exampleContainer.style.display = 'block';
-        
-        let i = 0;
-        exampleText.textContent = '_';
-        
-        exampleInterval = setInterval(() => {
-            if (i < text.length) {
-                // Use textContent exclusively. The <pre> tag will handle newlines.
-                let currentText = exampleText.textContent.slice(0, -1);
-                currentText += text.charAt(i);
-                exampleText.textContent = currentText + '_';
-                i++;
-            } else {
-                // Animation finished. Stop the interval and remove the cursor.
-                clearInterval(exampleInterval);
-                exampleText.textContent = exampleText.textContent.slice(0, -1);
-            }
-        }, 150); // Typing speed
-    }
+    hintButton.addEventListener('click', () => {
+        if (currentQuestion && currentQuestion.hint) {
+            hintCard.classList.toggle('hidden');
+            hintText.textContent = currentQuestion.hint;
+        }
+    });
 
     nextButton.addEventListener('click', getQuestion);
-    skipButton.addEventListener('click', skipQuestion);
-    hintButton.addEventListener('click', showHint);
+    skipButton.addEventListener('click', getQuestion);
 
-    // Initial load
+    // Move the next button to the top container when it's shown
+    const moveNextButton = () => {
+        const buttonClone = nextButton.cloneNode(true);
+        buttonClone.addEventListener('click', getQuestion);
+        nextButtonContainerTop.innerHTML = '';
+        nextButtonContainerTop.appendChild(buttonClone);
+    };
+
+    // Create a MutationObserver to watch for class changes on nextButtonContainerTop
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'class' && 
+                !nextButtonContainerTop.classList.contains('hidden')) {
+                moveNextButton();
+            }
+        });
+    });
+
+    // Start observing the next button container
+    observer.observe(nextButtonContainerTop, { attributes: true });
+
+    // Add a function to clear used questions
+    window.clearUsedQuestions = function() {
+        usedQuestions = [];
+        sessionStorage.removeItem('usedQuestions');
+        getQuestion();
+    };
+
+    // Initial question
     getQuestion();
-
-    // PWA Service Worker Registration
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./service-worker.js') // Standard relative path
-            .then((reg) => console.log('Service worker registered.', reg))
-            .catch((err) => console.log('Service worker not registered.', err));
-    }
 });
-

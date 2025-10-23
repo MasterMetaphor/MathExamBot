@@ -1,27 +1,16 @@
 :root {
-    --bg-color: #f0f2f5;
-    --card-bg: #ffffff;
-    --text-color: #1c1e21;
-    --primary-color: #007bff;
-    --button-hover: #0056b3;
-    --correct-bg: #e9f5e9;
-    --correct-border: #a8d5a8;
-    --incorrect-bg: #fdeeee;
-    --incorrect-border: #f8c2c2;
-}
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        --bg-color: #121212;
-        --card-bg: #1e1e1e;
-        --text-color: #e0e0e0;
-        --primary-color: #4dabf7;
-        --button-hover: #1e88e5;
-        --correct-bg: #1a3e1a;
-        --correct-border: #3c763d;
-        --incorrect-bg: #4d1f1f;
-        --incorrect-border: #a94442;
-    }
+    --bg-color: #000000;
+    --card-bg: #121212;
+    --text-color: #ffffff;
+    --secondary-text: #e0e0e0;
+    --primary-color: #0d47a1;
+    --button-hover: #1565c0;
+    --correct-bg: #1e4620;
+    --correct-border: #4CAF50;
+    --incorrect-bg: #4c1e1e;
+    --incorrect-border: #f44336;
+    --hint-bg: #333333;
+    --hint-border: #555555;
 }
 
 body {
@@ -59,26 +48,35 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 .stats {
     font-size: 20px;
     font-weight: bold;
-    color: var(--text-color);
+    color: var(--secondary-text);
     margin: 0;
 }
 
 .back-button {
-    background-color: #6c757d;
+    background-color: #424242;
     padding: 8px 15px;
     font-size: 16px;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.back-button:hover {
+    background-color: #616161;
 }
 
 .subtitle {
     font-size: 18px;
-    color: #666;
+    color: var(--secondary-text);
     margin-bottom: 30px;
+    text-align: center;
 }
 
 .start-buttons {
@@ -86,33 +84,59 @@ body {
     flex-direction: column;
     gap: 15px;
     align-items: center;
+    width: 100%;
+    max-width: 300px;
 }
 
 .topic-list {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 10px;
     margin-bottom: 30px;
 }
 
 .topic-button {
-    width: 100%;
-    max-width: 400px;
+    margin: 5px;
+    min-width: 200px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    padding: 12px 15px;
 }
 
-.back-button {
-    background-color: #6c757d;
+.topic-button:hover {
+    background-color: var(--button-hover);
+    transform: translateY(-2px);
 }
 
 .container {
     max-width: 800px;
     width: 100%;
-    text-align: center;
+    padding: 20px;
 }
 
 h1 {
-    font-size: 24px;
-    margin-bottom: 10px;
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: var(--text-color);
+    text-align: center;
+}
+
+h2 {
+    color: var(--secondary-text);
+}
+
+h3 {
+    color: #64b5f6;
+    margin-top: 20px;
+    margin-bottom: 5px;
 }
 
 .card {
@@ -120,28 +144,46 @@ h1 {
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 20px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px rgba(255,255,255,0.1);
     text-align: left;
+    border: 1px solid #333;
 }
 
-.options-container .button {
-    display: block;
-    width: 100%;
-    margin-bottom: 10px;
+.options-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.option-button {
     padding: 15px;
+    min-height: 70px;
     font-size: 16px;
-    text-align: center;
-    border: 1px solid transparent;
+    border: 1px solid #444;
+    border-radius: 8px;
+    background-color: #1a1a1a;
+    color: #ffffff;
     cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.option-button:hover {
+    background-color: #333333;
+    transform: translateY(-2px);
 }
 
 .button {
     background-color: var(--primary-color);
     color: white;
     border: none;
-    border-radius: 8px;
-    padding: 15px 25px;
-    font-size: 18px;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 16px;
     cursor: pointer;
     transition: background-color 0.2s;
 }
@@ -161,29 +203,43 @@ h1 {
 
 .feedback p {
     margin-top: 0;
+    color: var(--text-color);
 }
 
 .feedback pre {
-    background-color: var(--bg-color);
+    background-color: #1a1a1a;
     padding: 10px;
     border-radius: 4px;
     white-space: pre-wrap;
     word-wrap: break-word;
     font-family: "SF Mono", "Menlo", "Monaco", monospace;
     font-size: 14px;
+    color: var(--secondary-text);
 }
 
 .example-label {
     margin: 15px 0 5px;
     font-weight: bold;
-    color: #666;
+    color: var(--secondary-text);
+}
+
+.calculator-steps {
+    background-color: #1a1a1a;
+    border-left: 4px solid #0d47a1;
+    padding: 15px;
+    margin-top: 20px;
+    font-family: monospace;
+    white-space: pre-wrap;
+    line-height: 1.5;
+    font-size: 14px;
+    color: #e0e0e0;
 }
 
 .calculator-screen {
-    background-color: #383838; /* Darker screen for high contrast */
-    color: #FFEB3B; /* A very bright, vibrant yellow */
+    background-color: #1a1a1a;
+    color: #FFEB3B;
     font-family: monospace;
-    font-size: 16px; /* Larger font size */
+    font-size: 16px;
     padding: 15px;
     border-radius: 4px;
     white-space: pre-wrap;
@@ -191,47 +247,55 @@ h1 {
     min-height: 80px;
 }
 
-.correct {
-    background-color: var(--correct-bg);
+.correct-answer {
+    background-color: var(--correct-bg) !important;
+    color: white;
     border-color: var(--correct-border);
 }
 
-.incorrect {
-    background-color: var(--incorrect-bg);
+.incorrect-answer {
+    background-color: var(--incorrect-bg) !important;
+    color: white;
     border-color: var(--incorrect-border);
 }
 
 #hint-card {
-    background-color: #f7f6e8; /* Muted yellow */
-    border: 1px solid #dcdacb; /* Darker border */
-    color: #5d5c55; /* Darker text */
+    background-color: var(--hint-bg);
+    border: 1px solid var(--hint-border);
+    color: var(--secondary-text);
 }
 
 .button-container {
     display: flex;
-    gap: 10px;
-    justify-content: center;
+    gap: 15px;
+    justify-content: space-between;
+    margin-top: 20px;
 }
 
 .button.secondary {
-    background-color: #6c757d;
+    background-color: #424242;
 }
 
 .button.secondary:hover:not(:disabled) {
-    background-color: #5a6268;
+    background-color: #616161;
 }
 
-.back-link {
-    display: block;
-    margin-top: 25px;
+.streak-counter {
     text-align: center;
-    color: #888;
-    text-decoration: none;
-    font-size: 16px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #ff7043;
+    margin: 10px 0;
 }
 
-.back-link:hover {
-    text-decoration: underline;
+.hidden {
+    display: none !important;
+}
+
+.question-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
 }
 
 #bonus-animation-overlay {
@@ -307,15 +371,10 @@ h1 {
     .button {
         padding: 12px 20px;
         font-size: 16px;
-        /* Improve tap targets for mobile */
-        min-height: 44px;
     }
     
-    .options-container .button {
-        padding: 12px;
-        font-size: 15px;
-        /* Ensure good tap target size */
-        min-height: 44px;
+    .options-container {
+        grid-template-columns: 1fr;  /* Stack options vertically on mobile */
     }
 
     .card {
@@ -328,49 +387,5 @@ h1 {
 
     .button-container {
         flex-direction: column;
-    }
-}
-
-/* --- iOS Specific Styles --- */
-@supports (-webkit-touch-callout: none) {
-    /* iOS specific styles */
-    body {
-        /* Prevent elastic scrolling */
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    /* Fix for iOS notch */
-    .container {
-        padding-top: env(safe-area-inset-top);
-        padding-bottom: env(safe-area-inset-bottom);
-        padding-left: env(safe-area-inset-left);
-        padding-right: env(safe-area-inset-right);
-    }
-
-    /* Disable text selection */
-    * {
-        -webkit-user-select: none;
-        user-select: none;
-    }
-
-    /* Allow text selection in question and feedback */
-    #question-text, #feedback-text, #ti84-text, #example-text {
-        -webkit-user-select: text;
-        user-select: text;
-    }
-
-    /* Improve button touch feedback */
-    .button:active {
-        transform: scale(0.98);
-        transition: transform 0.1s;
-    }
-
-    /* Fix for iOS Safari 100vh issue */
-    .container {
-        min-height: -webkit-fill-available;
     }
 }
